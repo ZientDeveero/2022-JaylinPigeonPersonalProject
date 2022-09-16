@@ -10,12 +10,15 @@ public class BallScript : MonoBehaviour
     public float speed;
     public Transform redExplode;
     public Transform whiteExplode;
+    AudioSource audio;
+    AudioSource breakAudio;
     public GameManager gm;
     // Start is called before the first frame update
     void Start()
     {
         speed = 350;
         rb = GetComponent<Rigidbody2D>();
+        audio = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -49,11 +52,17 @@ public class BallScript : MonoBehaviour
         //Lose a life as well
         gm.ChangeLife();
     }
-    //if the paddle hits a brick, break it
+    
     void OnCollisionEnter2D(Collision2D other)
     {
+        if (!other.transform.CompareTag("Brick"))
+        {
+            audio.Play();
+        }
+        //if the paddle hits a brick, break it
         if (other.transform.CompareTag("Brick"))
         {
+            //breakAudio.Play();
             //trigger and destroy explosion
             Transform newRedExplosion = Instantiate(redExplode, other.transform.position, other.transform.rotation);
             Transform newWhiteExplosion = Instantiate(whiteExplode, other.transform.position, other.transform.rotation);
